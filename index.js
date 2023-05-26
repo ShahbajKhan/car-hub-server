@@ -27,6 +27,7 @@ async function run() {
     const vehicleCollection = client
       .db("rental-service")
       .collection("vehicles");
+    const teamCollection = client.db("rental-service").collection("team");
     // API for creating a new vehicle post.
     app.post("/add-a-vehicle", async (req, res) => {
       const vehicle = req.body;
@@ -76,6 +77,13 @@ async function run() {
       const result = await vehicleCollection.deleteOne(filter);
       res.send(result);
     });
+
+    // post a single teammate
+    app.post("/add-teammate", async(req, res)=>{
+      const teammate = req.body;
+      const result = await teamCollection.insertOne(teammate);
+      res.send(result);
+    })
   } finally {
   }
 }
