@@ -56,14 +56,24 @@ async function run() {
     // API for updating a single vehicle
     app.put("/update-by-id/:id", async (req, res) => {
       const id = req.params.id;
-      const filter = {_id: new ObjectId(id)};
+      const filter = { _id: new ObjectId(id) };
       const updatedVehicle = req.body;
 
-      const updates = {$set:updatedVehicle}
-      
+      const updates = { $set: updatedVehicle };
+
       // Now call the updateOne method for updating the selected vehicle
       const result = await vehicleCollection.updateOne(filter, updates);
-     
+
+      res.send(result);
+    });
+
+    // API for deleting a single vehicle
+    app.delete("/delete-by-id/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      // Now call the deleteOne method for deleting the selected vehicle
+
+      const result = await vehicleCollection.deleteOne(filter);
       res.send(result);
     });
   } finally {
