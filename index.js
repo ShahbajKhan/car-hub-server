@@ -3,7 +3,7 @@ const cors = require("cors");
 const app = express();
 // optional but secured
 require("dotenv").config();
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
 const port = process.env.PORT || 3000;
 
@@ -24,23 +24,34 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // CRUD operation
-    const vehicleCollection = client.db("rental-service").collection("vehicles")
+    const vehicleCollection = client
+      .db("rental-service")
+      .collection("vehicles");
     // API for creating a new vehicle post.
-    app.post("/add-a-vehicle", async(req, res) => {
+    app.post("/add-a-vehicle", async (req, res) => {
       const vehicle = req.body;
       // Insert to mongodb
       const result = await vehicleCollection.insertOne(vehicle);
       // console.log(req.body);
-      res.send(result)
+      res.send(result);
     });
-    
+
     //API for fetching all vehicles
-    
-    app.get("/all-vehicles", async(req, res) =>{
+
+    app.get("/all-vehicles", async (req, res) => {
       const result = await vehicleCollection.find().toArray();
       res.send(result);
-    })
-   
+    });
+    //  API for fetching single vehicle details
+
+    app.get("/vehicle/:id", async (req, res) => {
+      const id = req.params.id;
+      // Find a vehicle using the id passed as param
+      const query = { _id: new ObjectId(id) };
+      const result = await vehicleCollection.findOne(query);
+
+      res.send(result);
+    });
   } finally {
   }
 }
