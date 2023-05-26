@@ -79,11 +79,16 @@ async function run() {
     });
 
     // post a single teammate
-    app.post("/add-teammate", async(req, res)=>{
+    app.post("/add-teammate", async (req, res) => {
       const teammate = req.body;
       const result = await teamCollection.insertOne(teammate);
       res.send(result);
-    })
+    });
+    // get all the teammates
+    app.get("/all-teammates", async (req, res) => {
+      const result = await teamCollection.find().toArray();
+      res.send(result);
+    });
   } finally {
   }
 }
